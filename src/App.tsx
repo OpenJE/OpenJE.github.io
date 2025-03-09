@@ -7,7 +7,7 @@ import './App.css';
 const ClassDetails = ( className: string ) => {
   const cls = data.structures[ className as keyof typeof data.structures ];
 
-  if (!cls) {
+  if ( !cls ) {
     return <div>Class not found!</div>;
   }
 

@@ -6,7 +6,7 @@ export default function Method( ea, vftable ) {
   return (
     <>
       <td>
-        { ea },
+        { ea }
       </td>
       <td>
         { vftable.length }

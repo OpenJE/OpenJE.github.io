@@ -14,6 +14,9 @@ export default function Member( offset, member ) {
       <td>
         { member.type }
       </td>
+      <td>
+        { member.size }
+      </td>
     </>
   );
 };

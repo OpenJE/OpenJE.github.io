@@ -6,7 +6,7 @@ export default function Method( ea, method ) {
   return (
     <>
       <td>
-        { ea },
+        { ea }
       </td>
       <td>
         { method.name }

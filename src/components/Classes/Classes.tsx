@@ -1,17 +1,17 @@
 import React from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
-import Class from './Class/Class';
+import Class, { Structure } from './Class/Class';
 import './Classes.css';
 import data from '../../assets/F3.json';
 
 export default function Classes() {
   const [ currentClass, setCurrentClass ] = React.useState<string | null>( null );
-  const [searchQuery, setSearchQuery] = React.useState<string>('');
+  const [ searchQuery, setSearchQuery ] = React.useState<string>('');
 
   // Filter classes based on the search query
-  const filteredClasses = Object.keys(data.structures).filter((className) => {
-    const demangledName = data.structures[className as keyof typeof data.structures].demangled_name || className;
-    return demangledName.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredClasses = Object.keys( data.structures ).filter( ( className ) => {
+    const demangledName = data.structures[ className as keyof typeof data.structures ].demangled_name || className;
+    return demangledName.toLowerCase().includes( searchQuery.toLowerCase() );
   });
 
   return (
@@ -21,7 +21,6 @@ export default function Classes() {
           <h1>Jefferson Engine Classes:</h1>
         </Col>
       </Row>
-
       <Row className="main">
         <Col className="sidebar">
           <Form.Control
@@ -41,7 +40,7 @@ export default function Classes() {
           </ul>
         </Col>
         <Col className="content">
-          { currentClass && Class( currentClass, data.structures[ currentClass as keyof typeof data.structures ] ) }
+          { currentClass && Class( currentClass, data.structures[ currentClass as keyof typeof data.structures ] as unknown as Structure ) }
         </Col>
       </Row>
     </Container>

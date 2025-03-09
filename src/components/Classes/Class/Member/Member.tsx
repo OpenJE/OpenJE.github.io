@@ -1,8 +1,17 @@
-import React from 'react';
-import { Container } from 'react-bootstrap';
 import './Member.css';
 
-export default function Member( offset, member ) {
+export type Member = {
+  base: boolean,
+  name: string,
+  offset: string,
+  parent: false,
+  size: number,
+  struc: string,
+  type: string
+  usages: Array<string>
+}
+
+export default function MemberData( offset: string, member: Member ) {
   return (
     <>
       <td>

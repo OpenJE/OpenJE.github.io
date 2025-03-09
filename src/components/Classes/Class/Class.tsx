@@ -1,11 +1,19 @@
-import React from 'react';
 import { Container, Table } from 'react-bootstrap';
-import Member from './Member/Member';
-import Method from './Method/Method';
-import VTable from './VTable/VTable';
+import MemberData, { Member } from './Member/Member';
+import MethodData, { Method } from './Method/Method';
+import VTableData, { VTable } from './VTable/VTable';
 import './Class.css';
 
-export default function Class( className: string, structure ) {
+export type Structure = {
+  demangled_name: string,
+  members: Map<string, Member>,
+  methods: Map<string, Method>,
+  name: string,
+  size: number,
+  vftables: Map<string, VTable>
+}
+
+export default function Class( className: string, structure: Structure ) {
   if ( !structure ) {
     return <div>Class not found!</div>;
   }
@@ -23,7 +31,7 @@ export default function Class( className: string, structure ) {
       <tbody>
       { Object.entries( structure.members ).map( ( [ offset, member ] ) => (
         <tr key={ offset }>
-          { Member( offset, member ) }
+          { MemberData( offset, member ) }
         </tr>
       ))}
       </tbody>
@@ -42,7 +50,7 @@ export default function Class( className: string, structure ) {
       <tbody>
         { Object.entries( structure.methods ).map( ( [ ea, method ] ) => (
           <tr key={ ea }>
-            { Method( ea, method ) }
+            { MethodData( ea, method ) }
           </tr>
         ))}
       </tbody>
@@ -60,7 +68,7 @@ export default function Class( className: string, structure ) {
       <tbody>
         { Object.entries( structure.vftables ).map( ( [ ea, vftable ] ) => (
           <tr key={ ea }>
-            { VTable( ea, vftable ) }
+            { VTableData( ea, vftable ) }
           </tr>
         ))}
       </tbody>

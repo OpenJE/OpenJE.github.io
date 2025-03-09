@@ -1,8 +1,14 @@
-import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Method } from '../Method/Method';
 import './VTable.css';
 
-export default function Method( ea, vftable ) {
+export type VTable = {
+  ea: string,
+  entries: Map<string, Method>,
+  length: number,
+  vftptr: string
+}
+
+export default function VTableData( ea: string, vftable: VTable ) {
   return (
     <>
       <td>

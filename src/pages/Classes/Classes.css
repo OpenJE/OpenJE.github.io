@@ -1,0 +1,52 @@
+.classes-container {
+  padding: 0.625rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.classes-body {
+  display: flex;
+  overflow: hidden;
+}
+
+.classes-header {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.classes-body-sidebar {
+  flex: auto
+  overflow: hidden;
+  background-color: #131313;
+  padding: 0.625rem;
+  border-radius: 0.625rem;
+}
+
+.classes-body-content {
+  background: #4b4b4b;
+  padding: 0.625rem;
+  border-radius: 0.625rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+h1 {
+  margin: 1.25rem 0;
+}
+
+.sidebar button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar button:hover {
+  background-color: #555;
+}

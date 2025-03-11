@@ -1,0 +1,6 @@
+.home-container {
+  padding: 0.625rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

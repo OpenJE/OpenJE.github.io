@@ -35,6 +35,10 @@ export default function VanBuren() {
       demangledName.includes("__non_rtti_object") ||
       demangledName.includes("bad_") ||
       demangledName.includes("type_") ||
+      demangledName.includes("PipBoy") &&
+      !demangledName.includes("CGameFloatingTextInterface") &&
+      !demangledName.includes("CGameInterface") &&
+      !demangledName.includes("COptionsGameInterface") ||
       !demangledName.toLowerCase().includes(searchQuery.toLowerCase())
     ) {
       return false;

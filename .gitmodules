@@ -1,0 +1,3 @@
+[submodule "openje-bs"]
+	path = openje-bs
+	url = https://github.com/OpenJE/openje-bs.bsproj.git

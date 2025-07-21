@@ -1,0 +1,29 @@
+.home > h1 {
+  font-family: 'Gothic821 Cn BT', sans-serif;
+  text-align: center;
+  padding: 1rem;
+}
+
+.home > p {
+  text-align: left;
+  padding: 1rem;
+}
+
+.home > section > h2 {
+  text-align: center;
+  padding: 1rem;
+}
+
+.home > section > p {
+  padding: 1rem;
+}
+
+.home > section > ul {
+  list-style-type: disc;
+  padding: 1rem;
+}
+
+.home > section > ul > li {
+
+  padding: 1rem;
+}

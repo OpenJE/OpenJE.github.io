@@ -1,4 +1,3 @@
-import { Container } from 'react-bootstrap';
 import './Method.css';
 
 export type Method = {
@@ -11,7 +10,7 @@ export type Method = {
 
 export default function MethodData( ea: string, method: Method ) {
   return (
-    <Container className="method-container">
+    <>
       <td>
         { ea }
       </td>
@@ -21,6 +20,9 @@ export default function MethodData( ea: string, method: Method ) {
       <td>
         { method.type }
       </td>
-    </Container>
+      <td>
+        { method.import ? 'Yes' : 'No' }
+      </td>
+    </>
   );
 };

@@ -1,74 +1,91 @@
-.app-container {
+@font-face {
+  font-family: 'Gothic821 Cn BT';
+  src: url('/fonts/Gothic821CondensedBT-Regular.woff2') format('woff2'),
+       url('/fonts/Gothic821CondensedBT-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fallouty';
+  src: url('/fonts/Fallouty.woff2') format('woff2'),
+       url('/fonts/Fallouty.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  border: 1px dashed rgba(18, 255, 18, 0.25);
+  color: rgb(18, 255, 18);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  background-color: rgb(0, 0, 0);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
   width: 100vw;
   height: 100vh;
 }
 
-.nav-container {
+.app > header {
+  grid-row: 1;
+  grid-column: 1;
   display: flex;
-  justify-content: center; /* Center the navbar content horizontally */
+  flex-direction: row;
   align-items: center;
-  padding: 0.625rem; /* 10px / 16 = 0.625rem */
-  background-color: #131313; /* Optional: Add a background color */
-  border-radius: 0.625rem; /* Optional: Add rounded corners */
+  padding: 1rem;
 }
 
-.nav {
-  display: inline-block; /* Ensure the nav buttons are inline-block to center them */
+.app > header > h1 {
+  font-size: 2rem;
 }
 
-.home-container {
-  padding: 0.625rem; /* 10px / 16 = 0.625rem */
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+.app > header > nav {
+  font-size: 1rem;
+  padding-left: 1rem;
 }
 
-.classes-container {
-  padding: 0.625rem; /* 10px / 16 = 0.625rem */
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.main {
-  display: flex;
-  flex: 1;
+.app > main {
+  grid-row: 2;
+  grid-column: 1;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto, 1fr;
   overflow: hidden;
 }
 
-.sidebar {
-  flex: 0 1 auto; /* Allow the sidebar to grow and shrink based on its content */
-  overflow-y: auto; /* Make sidebar scrollable if content overflows */
-  background-color: #131313; /* Optional: Add a background color */
-  padding: 0.625rem; /* 10px / 16 = 0.625rem */
-  border-radius: 0.625rem; /* Optional: Add rounded corners */
+.app > footer {
+  grid-row: 3;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
 }
 
-.content {
-  background: #4b4b4b; /* Optional: Add a light background color */
-  flex: 1; /* Take up remaining space */
-  overflow-y: auto; /* Allow content to scroll if needed */
-  padding: 0.625rem; /* 10px / 16 = 0.625rem */
-  border-radius: 0.625rem; /* Optional: Add rounded corners */
+.app h1,
+.app h2,
+.app h3 {
+  font-family: 'Gothic821 Cn BT', sans-serif;
 }
 
-h1 {
-  margin: 1.25rem 0; /* 20px / 16 = 1.25rem */
-}
-
-/* Example styles for list buttons */
-.sidebar button {
-  display: block; /* Make buttons take full width */
-  width: 100%; /* Ensure buttons fill the sidebar width */
-  padding: 0.5rem 1rem; /* Add padding for button size */
-  margin-bottom: 0.5rem; /* Space between buttons */
-  background-color: #444; /* Example button background */
-  color: #fff; /* Example button text color */
-  border: none; /* Remove default button border */
-  text-align: left; /* Align text to the left */
-  cursor: pointer; /* Change cursor on hover */
-}
-
-.sidebar button:hover {
-  background-color: #555; /* Change background on hover */
+.app p,
+.app button,
+.app th,
+.app td,
+.app li,
+.app label {
+  font-family: 'Fallouty', sans-serif;
 }

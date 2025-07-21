@@ -1,44 +1,46 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
-import Classes from './components/Classes/Classes';
-import './App.css';
+import Home from './pages/Home/Home';
 
-const Home = () => {
-  return (
-    <Container className="home-container">
-      <Row>
-        <Col>
-          <h1>Jefferson Engine Documentation</h1>
-        </Col>
-      </Row>
-    </Container>
-  );
-}
+import VanBuren from './pages/VanBuren/VanBuren';
+import JeffersonEngine from './pages/JeffersonEngine/JeffersonEngine';
+import './App.css';
 
 const Nav = (): React.JSX.Element => {
   const navigate = useNavigate();
   return (
-    <Container fluid className="nav-container">
-      <InputGroup className="nav">
-        <Button onClick={ () => navigate( '/' ) }>Home</Button>
-        <Button onClick={ () => navigate( '/classes' ) }>Classes</Button>
-      </InputGroup>
-    </Container>
+    <>
+      <h1>OpenJE</h1>
+      <nav>
+        <form onSubmit={ ( e ) => e.preventDefault() }>
+          <button onClick={ () => navigate( '/' ) }>Home</button>
+          <button onClick={ () => navigate( '/van-buren' ) }>Van Buren</button>
+          <button onClick={ () => navigate( '/jefferson-engine' ) }>Jefferson Engine</button>
+        </form>
+      </nav>
+    </>
   );
 }
 
 function App() {
   return (
-    <Container className="app-container">
+    <div className="app">
       <Router>
-        <Nav />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/classes" element={<Classes />} />
-        </Routes>
+        <header>
+          <Nav />
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/van-buren" element={<VanBuren />} />
+            <Route path="/jefferson-engine" element={<JeffersonEngine />} />
+          </Routes>
+        </main>
+        <footer>
+          <p>Open Jefferson Engine</p>
+        </footer>
       </Router>
-    </Container>
+    </div>
   );
 }
 

@@ -35,7 +35,7 @@ export default function Class( className: string, structure: Structure ) {
     );
   }
 
-  function getMemberType( memberType: string, memberSize: number ): "int8" | "int16" | "int32" | "int64" | "struct" | "unknown" {
+  function getMemberType( memberType: string, memberSize: number ): "int8" | "int16" | "int32" | "int64" | "struct" | "vftptr" | "unknown" {
     if ( memberType === '' ) {
       if ( memberSize <= 1 ) return "int8";
       if ( memberSize <= 2 ) return "int16";
@@ -43,6 +43,8 @@ export default function Class( className: string, structure: Structure ) {
       if ( memberSize <= 8 ) return "int64";
     } else if ( memberType === 'struc' ) {
       return "struct"; // If it's a struct, we return struct type
+    } else if ( memberType === 'vftptr' ) {
+      return "vftptr"; // If it's a struct, we return struct type
     }
     return "unknown";
   }

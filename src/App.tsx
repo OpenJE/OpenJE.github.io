@@ -5,6 +5,7 @@ import Home from './pages/Home/Home';
 import VanBuren from './pages/VanBuren/VanBuren';
 import JeffersonEngine from './pages/JeffersonEngine/JeffersonEngine';
 import './App.css';
+import GlobalProvider from './context/GlobalContext';
 
 const Nav = (): React.JSX.Element => {
   const navigate = useNavigate();
@@ -24,23 +25,25 @@ const Nav = (): React.JSX.Element => {
 
 function App() {
   return (
-    <div className="app">
-      <Router>
-        <header>
-          <Nav />
-        </header>
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/van-buren" element={<VanBuren />} />
-            <Route path="/jefferson-engine" element={<JeffersonEngine />} />
-          </Routes>
-        </main>
-        <footer>
-          <p>Open Jefferson Engine</p>
-        </footer>
-      </Router>
-    </div>
+    <GlobalProvider>
+      <div className="app">
+        <Router>
+          <header>
+            <Nav />
+          </header>
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/van-buren" element={<VanBuren />} />
+              <Route path="/jefferson-engine" element={<JeffersonEngine />} />
+            </Routes>
+          </main>
+          <footer>
+            <p>Open Jefferson Engine</p>
+          </footer>
+        </Router>
+      </div>
+    </GlobalProvider>
   );
 }
 

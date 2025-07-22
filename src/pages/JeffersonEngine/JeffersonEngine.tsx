@@ -52,6 +52,12 @@ export default function VanBuren() {
     return true;
   });
 
+  const sortedClasses = filteredClasses.sort((a, b) => {
+    const aName = data.structures[a as keyof typeof data.structures].demangled_name || a;
+    const bName = data.structures[b as keyof typeof data.structures].demangled_name || b;
+    return aName.localeCompare(bName);
+  });
+
   const Sidebar = () => (
     <aside>
       <form onSubmit={ ( e ) => e.preventDefault() }>
@@ -81,15 +87,15 @@ export default function VanBuren() {
           Hide Derived Classes
         </label>
         <ul>
-          { filteredClasses.map( ( className ) => (
-        <li key={ className }>
-          <button
-            type="button" // Ensure the button doesn't submit the form
-            onClick={ () => setCurrentClass( className ) }
-          >
-            { data.structures[ className as keyof typeof data.structures ].demangled_name || className }
-          </button>
-        </li>
+          { sortedClasses.map( ( className ) => (
+            <li key={ className }>
+              <button
+                type="button" // Ensure the button doesn't submit the form
+                onClick={ () => setCurrentClass( className ) }
+              >
+                { data.structures[ className as keyof typeof data.structures ].demangled_name || className }
+              </button>
+            </li>
           ))}
         </ul>
       </form>

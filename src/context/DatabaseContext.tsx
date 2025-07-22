@@ -25,12 +25,14 @@ const DatabaseProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
     // Convert plain objects to Structure with Map members
     const structures: Record<string, any> = data.structures;
     let entries = Object.entries(structures).map(([className, structureObj]) => {
-      // Convert members and possibly other properties to Map if needed
       const members = new Map<string, any>(Object.entries(structureObj.members || {}));
-      // If there are other properties that need conversion, do it here
+      const methods = new Map<string, any>(Object.entries(structureObj.methods || {}));
+      const vftables = new Map<string, any>(Object.entries(structureObj.vftables || {}));
       const structure: Structure = {
         ...structureObj,
         members,
+        methods,
+        vftables,
       };
       return [className, structure] as [string, Structure];
     });
@@ -39,11 +41,13 @@ const DatabaseProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
       entries = entries.filter(([className, structure]) => filterFn(className, structure));
     }
     if (options?.sortDirection) {
-      entries.sort(([a], [b]) =>
-        options.sortDirection === "ascending"
-          ? a.localeCompare(b)
-          : b.localeCompare(a)
-      );
+      entries.sort(([nameA, structA], [nameB, structB]) => {
+        const aName = structA.demangled_name || nameA;
+        const bName = structB.demangled_name || nameB;
+        return options?.sortDirection === "ascending"
+          ? aName.localeCompare(bName)
+          : bName.localeCompare(aName);
+      });
     }
     const map = new Map<string, Structure>(entries);
     return map;

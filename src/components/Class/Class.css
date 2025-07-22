@@ -11,3 +11,37 @@
   border-collapse: collapse;
   table-layout: auto;
 }
+
+/*
+.inheritance-tree ul {
+  list-style-type: none;
+  margin: 0;
+  padding-left: 1.5em;
+  border-left: 1px solid;
+}
+*/
+
+/*
+.inheritance-tree li {
+  margin: 0.2em 0;
+  position: relative;
+}
+*/
+
+/*
+.inheritance-tree li::before {
+  content: '';
+  position: absolute;
+  left: -1.5em;
+  top: 1em;
+  width: 1.5em;
+  height: 0;
+  border-top: 1px solid;
+}*/
+
+.inheritance-tree ul {
+  list-style: none;
+  margin-left: 1em;
+  padding-left: 1em;
+  border-left: 1px solid;
+}

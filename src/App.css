@@ -86,6 +86,7 @@
 .app th,
 .app td,
 .app li,
-.app label {
+.app label,
+.app code {
   font-family: 'Fallouty', sans-serif;
 }

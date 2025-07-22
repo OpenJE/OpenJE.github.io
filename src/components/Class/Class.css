@@ -4,3 +4,10 @@
   border-collapse: collapse;
   table-layout: auto;
 }
+
+.class-container > pre {
+  width: 100%;
+  border: 1px solid ;
+  border-collapse: collapse;
+  table-layout: auto;
+}

@@ -21,18 +21,55 @@ export default function Class( className: string, structure: Structure ) {
 
   const [ showBase, setShowBase ] = useState( false );
 
+  // Helper: is this class a base class (no parents)?
+  function isBaseClass( structure: Structure ) {
+    return !Object.values( structure.members ).some(
+      ( member: any ) => member.parent && !member.base
+    );
+  }
+
+  // Helper: is this class a base class (no parents)?
+  function isDerivedClass( structure: Structure ) {
+    return Object.values( structure.members ).some(
+      ( member: any ) => member.parent && !member.base
+    );
+  }
+
+  function getMemberType( memberType: string, memberSize: number ): "int8" | "int16" | "int32" | "int64" | "struct" | "unknown" {
+    if ( memberType === '' ) {
+      if ( memberSize <= 1 ) return "int8";
+      if ( memberSize <= 2 ) return "int16";
+      if ( memberSize <= 4 ) return "int32";
+      if ( memberSize <= 8 ) return "int64";
+    } else if ( memberType === 'struc' ) {
+      return "struct"; // If it's a struct, we return struct type
+    }
+    return "unknown";
+  }
+
+  function getClassOrStruct( mangledName: string ): "class" | "struct" {
+    if ( !mangledName ) return "class";
+    if ( mangledName.startsWith( '.?AV' ) ) return "class";
+    if ( mangledName.startsWith( '.?AU' ) ) return "struct";
+    return "class";
+  }
+
   const info = () => (
     <table className="members-table">
       <thead>
         <tr>
+          <th>Type</th>
+          <th>Hierarchy</th>
           <th>Size</th>
           <th># Members</th>
           <th># Methods</th>
-          <th># VTables</th>
+          <th># VFTables</th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td>{ getClassOrStruct( structure.name ) }</td>
+          <td>{ isBaseClass(structure) ? 'Base' : isDerivedClass(structure) ? 'Derived' : 'Unknown' }</td>
           <td>{ `${structure.size} (0x${structure.size.toString(16).toUpperCase()})` }</td>
           <td>{ Object.keys( structure.members ).length }</td>
           <td>{ Object.keys( structure.methods ).length }</td>
@@ -135,6 +172,31 @@ export default function Class( className: string, structure: Structure ) {
     </table>
   );
 
+  function cppClass(structure: Structure): string {
+    const classOrStruct = getClassOrStruct(structure.name);
+    const name = structure.demangled_name || structure.name;
+
+    // Parents (base classes)
+    const parents = Object.values(structure.members)
+      .filter(m => m.parent && !m.base)
+      .map(m => m.struc)
+      .join(", ");
+
+    // Members
+    const members = Object.entries(structure.members)
+      .filter(([ , m ]) => !m.parent) // skip parent pointers
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([ , m ]) => `    ${getMemberType(m.type, m.size)} ${m.name};`)
+      .join("\n");
+
+    // Methods
+    const methods = Object.values(structure.methods)
+      .map(m => `    ${m.name}();`)
+      .join("\n");
+
+    return `${classOrStruct} ${name}${parents ? " : " + parents : ""} {\npublic:\n${members}\n\n${methods}\n};`;
+  }
+
   return (
     <section className="class-container">
       <h2>{ structure.demangled_name || className }</h2>
@@ -145,8 +207,14 @@ export default function Class( className: string, structure: Structure ) {
       { members() }
       <h3>Methods</h3>
       { methods() }
-      <h3>VTables</h3>
+      <h3>VFTables</h3>
       { vtables() }
+      <h3>Pseudocode</h3>
+      <pre>
+        <code>
+          { cppClass( structure ) }
+        </code>
+      </pre>
     </section>
   );
 };

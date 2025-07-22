@@ -13,37 +13,37 @@ export default function VanBuren() {
   const [ hideDerivedClasses, setHideDerivedClasses ] = React.useState(false);
 
   // Helper: is this class a base class (no parents)?
-  function isBaseClass(structure: Structure) {
-    return !Object.values(structure.members).some(
-      (member: any) => member.parent && !member.base
+  function isBaseClass( structure: Structure ) {
+    return !Object.values( structure.members ).some(
+      ( member: any ) => member.parent && !member.base
     );
   }
 
   // Helper: is this class a base class (no parents)?
-  function isDerivedClass(structure: Structure) {
-    return Object.values(structure.members).some(
-      (member: any) => member.parent && !member.base
+  function isDerivedClass( structure: Structure ) {
+    return Object.values( structure.members ).some(
+      ( member: any ) => member.parent && !member.base
     );
   }
 
   // Filter classes based on the search query
-  const filteredClasses = Object.keys(data.structures).filter((className) => {
-    const structure = data.structures[className as keyof typeof data.structures] as unknown as Structure;
+  const filteredClasses = Object.keys( data.structures ).filter( ( className ) => {
+    const structure = data.structures[ className as keyof typeof data.structures ] as unknown as Structure;
     const demangledName = structure.demangled_name || className;
     if (
-      !demangledName.includes("Game") &&
-      !demangledName.includes("PipBoy") ||
-      demangledName.includes("CGameFloatingTextInterface") ||
-      demangledName.includes("CGameInterface") ||
-      demangledName.includes("COptionsGameInterface") ||
+      !demangledName.includes( "Game" ) &&
+      !demangledName.includes( "PipBoy" ) ||
+      demangledName.includes( "CGameFloatingTextInterface" ) ||
+      demangledName.includes( "CGameInterface" ) ||
+      demangledName.includes( "COptionsGameInterface" ) ||
       !demangledName.toLowerCase().includes(searchQuery.toLowerCase())
     ) {
       return false;
     }
-    if (hideBaseClasses && isBaseClass(structure)) {
+    if ( hideBaseClasses && isBaseClass( structure ) ) {
       return false;
     }
-    if (hideDerivedClasses && isDerivedClass(structure)) {
+    if ( hideDerivedClasses && isDerivedClass( structure ) ) {
       return false;
     }
     return true;
@@ -64,16 +64,16 @@ export default function VanBuren() {
         <label>
           <input
             type="checkbox"
-            checked={hideBaseClasses}
-            onChange={e => setHideBaseClasses(e.target.checked)}
+            checked={ hideBaseClasses }
+            onChange={ e => setHideBaseClasses( e.target.checked ) }
           />
           Hide Base Classes
         </label>
         <label>
           <input
             type="checkbox"
-            checked={hideDerivedClasses}
-            onChange={e => setHideDerivedClasses(e.target.checked)}
+            checked={ hideDerivedClasses }
+            onChange={ e => setHideDerivedClasses( e.target.checked ) }
           />
           Hide Derived Classes
         </label>

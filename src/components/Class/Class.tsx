@@ -14,6 +14,53 @@ export type Structure = {
   vftables: Map<string, VTable>
 }
 
+function demangleMsvcClass(mangled: string): string {
+  // Check for the basic pattern
+  if (!mangled.startsWith('.?') || !mangled.endsWith('@@')) {
+      return mangled; // Not a mangled class/struct name
+  }
+
+  // Remove leading '?' and trailing '@@'
+  let core = mangled.slice(4, -2);
+
+  // Split by '@' and remove empty parts
+  let parts = core.split('@').filter(Boolean);
+
+  // The order is inner-to-outer, so reverse for C++ style
+  return parts.reverse().join('::');
+}
+
+function formatMemberName(mangled: string): string {
+  // Handle member names like '.?AUAction@@_0x0' or '.?AVStringSystem@SS@@_0x0'
+  // Extract the mangled part before any suffix like '_0x0'
+  const match = mangled.match(/^(\.\?[AUV][A-Za-z0-9_@]+@@)/);
+  let coreMangled = mangled;
+  let suffix = '';
+
+  if (match) {
+    coreMangled = match[1];
+    suffix = mangled.slice(coreMangled.length);
+  }
+
+  // Check for the basic pattern
+  if (!coreMangled.startsWith('.?') || !coreMangled.endsWith('@@')) {
+    return mangled.toLowerCase(); // Not a mangled class/struct name, just lowercase
+  }
+
+  // Remove leading '.?' and trailing '@@'
+  let core = coreMangled.slice(4, -2);
+
+  // Split by '@' and remove empty parts
+  let parts = core.split('@').filter(Boolean);
+
+  // The order is inner-to-outer, so reverse for C++ style
+  // Only keep the innermost name (last after reverse)
+  const demangled = parts.length > 0 ? parts[0].toLowerCase() : mangled.toLowerCase();
+
+  // Append any suffix (like '_0x0') back
+  return demangled + suffix.toLowerCase();
+}
+
 export default function Class( className: string, structure: Structure ) {
   if ( !structure ) {
     return <div>Class not found!</div>;
@@ -35,18 +82,26 @@ export default function Class( className: string, structure: Structure ) {
     );
   }
 
-  function getMemberType( memberType: string, memberSize: number ): "int8" | "int16" | "int32" | "int64" | "struct" | "void *" | "unknown" {
-    if ( memberType === '' ) {
-      if ( memberSize <= 1 ) return "int8";
-      if ( memberSize <= 2 ) return "int16";
-      if ( memberSize <= 4 ) return "int32";
-      if ( memberSize <= 8 ) return "int64";
-    } else if ( memberType === 'struc' ) {
-      return "struct"; // If it's a struct, we return struct type
-    } else if ( memberType === 'vftptr' ) {
-      return "void *"; // If it's a struct, we return struct type
+  function getMemberType( member: Member ): string {
+    if ( member.type === "struc" ) {
+      return demangleMsvcClass(member.struc);
+    } else if ( member.type === "vftptr" ) {
+      return "void *";
+    } else if ( member.type === "" ) {
+      if ( member.size === 1 ) {
+        return "int8";
+      } else if ( member.size === 2 ) {
+        return "int16";
+      } else if ( member.size === 4 ) {
+        return "int32";
+      } else if ( member.size === 8 ) {
+        return "int64";
+      } else {
+        return "unknown";
+      }
+    } else {
+      return "unknown";
     }
-    return "unknown";
   }
 
   function getClassOrStruct( mangledName: string ): "class" | "struct" {
@@ -166,7 +221,7 @@ export default function Class( className: string, structure: Structure ) {
           .filter(([ , member ]) => member.parent && !member.base)
           .map(([ offset, member ]) => (
             <tr key={offset}>
-              <td>{member.struc}</td>
+              <td>{demangleMsvcClass(member.struc)}</td>
               <td>{offset}</td>
             </tr>
           ))}
@@ -174,30 +229,34 @@ export default function Class( className: string, structure: Structure ) {
     </table>
   );
 
-  function cppClass(structure: Structure): string {
-    const classOrStruct = getClassOrStruct(structure.name);
-    const name = structure.demangled_name || structure.name;
+function cppClass(structure: Structure): string {
+  const classOrStruct = getClassOrStruct(structure.name);
+  const name = structure.demangled_name || structure.name;
 
-    // Parents (base classes)
-    const parents = Object.values(structure.members)
-      .filter(m => m.parent && !m.base)
-      .map(m => m.struc)
-      .join(", ");
+  // Parents (base classes)
+  const parents = Object.entries(structure.members)
+    .filter(([ , m ]) => m.parent && !m.base)
+    .sort(([offsetA], [offsetB]) => Number(offsetA) - Number(offsetB))
+    .map(([ , m ]) => demangleMsvcClass(m.struc))
+    .join(", ");
 
-    // Members
-    const members = Object.entries(structure.members)
-      .filter(([ , m ]) => !m.parent) // skip parent pointers
-      .sort(([a], [b]) => Number(a) - Number(b))
-      .map(([ , m ]) => `    ${getMemberType(m.type, m.size)} ${m.name};`)
-      .join("\n");
+  // Members
+  const members = Object.entries(structure.members)
+    .filter(([ , m ]) => !m.parent && !m.base && m.type !== "vftptr")
+    .sort(([a], [b]) => Number(a) - Number(b))
+    .map(([ , m ]) => `    ${getMemberType(m)} ${formatMemberName(m.name)};`)
+    .join("\n");
 
-    // Methods
-    const methods = Object.values(structure.methods)
-      .map(m => `    ${m.name}();`)
-      .join("\n");
+  // Methods
+  const methods = Object.values(structure.methods)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(m => `    ${m.name}();`)
+    .join("\n");
 
-    return `${classOrStruct} ${name}${parents ? " : " + parents : ""} {\npublic:\n${members}\n\n${methods}\n};`;
-  }
+  const membersSection = members ? `public:\n${members}\n` : '';
+  const methodsSection = methods ? `public:\n${methods}\n` : '';
+  return `${classOrStruct} ${name}${parents ? " : " + parents : ""} {\n${membersSection}${methodsSection}};`;
+}
 
   return (
     <section className="class-container">

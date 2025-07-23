@@ -12,6 +12,17 @@
   table-layout: auto;
 }
 
+.class-container > .inheritance-tree {
+  width: 100%;
+  border: 1px solid ;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.class-container > .inheritance-tree > ul > li {
+  border-collapse: collapse;
+}
+
 /*
 .inheritance-tree ul {
   list-style-type: none;
